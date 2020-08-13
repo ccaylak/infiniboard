@@ -1,13 +1,14 @@
 package com.github.reflectoring.infiniboard.quartermaster.dashboard.rest;
 
 import static org.springframework.http.HttpStatus.*;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 import com.github.reflectoring.infiniboard.packrat.dashboard.Dashboard;
 import com.github.reflectoring.infiniboard.quartermaster.dashboard.domain.DashboardService;
 import com.github.reflectoring.infiniboard.quartermaster.exception.ErrorResource;
+
 import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,58 +19,61 @@ import org.springframework.hateoas.ResourceSupport;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/api/dashboards")
 public class DashboardController {
 
-  private DashboardService service;
+    private DashboardService service;
 
-  private DashboardResourceAssembler dashboardResourceAssembler;
+    private DashboardResourceAssembler dashboardResourceAssembler;
 
-  @Autowired
-  public DashboardController(
-      DashboardService service, DashboardResourceAssembler dashboardResourceAssembler) {
-    this.service = service;
-    this.dashboardResourceAssembler = dashboardResourceAssembler;
-  }
-
-  @RequestMapping(
-      method = POST,
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<ResourceSupport> create(
-      @RequestBody @Valid DashboardResource dashboardResource, Errors errors) {
-
-    if (errors.hasErrors()) {
-      return new ResponseEntity<>(new ErrorResource(errors), BAD_REQUEST);
+    @Autowired
+    public DashboardController(
+            DashboardService service, DashboardResourceAssembler dashboardResourceAssembler) {
+        this.service = service;
+        this.dashboardResourceAssembler = dashboardResourceAssembler;
     }
 
-    Dashboard savedDashboard = service.save(dashboardResourceAssembler.toEntity(dashboardResource));
-    DashboardResource resource = dashboardResourceAssembler.toResource(savedDashboard);
-    return new ResponseEntity<>(resource, OK);
-  }
+    @RequestMapping(
+            method = POST,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResourceSupport> create(
+            @RequestBody @Valid DashboardResource dashboardResource, Errors errors) {
 
-  @SuppressWarnings("unchecked")
-  @RequestMapping(method = GET, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<PagedResources<DashboardResource>> getAllDashboards(
-      @PageableDefault Pageable pageable, PagedResourcesAssembler pagedResourcesAssembler) {
+        if (errors.hasErrors()) {
+            return new ResponseEntity<>(new ErrorResource(errors), BAD_REQUEST);
+        }
 
-    Page<Dashboard> dashboardsPage = service.loadAll(pageable);
-    PagedResources<DashboardResource> pagedResources =
-        pagedResourcesAssembler.toResource(dashboardsPage, dashboardResourceAssembler);
-    return new ResponseEntity<>(pagedResources, OK);
-  }
+        Dashboard savedDashboard = service.save(dashboardResourceAssembler.toEntity(dashboardResource));
+        DashboardResource resource = dashboardResourceAssembler.toResource(savedDashboard);
+        return new ResponseEntity<>(resource, OK);
+    }
 
-  @RequestMapping(value = "/{slug}", method = GET, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<DashboardResource> getDashboard(@PathVariable String slug) {
-    Dashboard dashboard = service.load(slug);
+    @SuppressWarnings("unchecked")
+    @RequestMapping(method = GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PagedResources<DashboardResource>> getAllDashboards(
+            @PageableDefault Pageable pageable, PagedResourcesAssembler pagedResourcesAssembler) {
 
-    DashboardResource resource = dashboardResourceAssembler.toResource(dashboard);
-    return new ResponseEntity<>(resource, OK);
-  }
+        Page<Dashboard> dashboardsPage = service.loadAll(pageable);
+        PagedResources<DashboardResource> pagedResources =
+                pagedResourcesAssembler.toResource(dashboardsPage, dashboardResourceAssembler);
+        return new ResponseEntity<>(pagedResources, OK);
+    }
+
+    @RequestMapping(value = "/{slug}", method = GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<DashboardResource> getDashboard(@PathVariable String slug) {
+        Dashboard dashboard = service.load(slug);
+
+        DashboardResource resource = dashboardResourceAssembler.toResource(dashboard);
+        return new ResponseEntity<>(resource, OK);
+    }
+
+    @RequestMapping(value = "/{slug}", method = DELETE)
+    public void delete(@PathVariable String slug) {
+        service.delete(slug);
+    }
 }
