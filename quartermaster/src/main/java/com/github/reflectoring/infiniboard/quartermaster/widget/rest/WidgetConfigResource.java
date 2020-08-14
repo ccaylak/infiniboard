@@ -2,73 +2,86 @@ package com.github.reflectoring.infiniboard.quartermaster.widget.rest;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.github.reflectoring.infiniboard.packrat.source.SourceConfig;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.NotNull;
+
 import org.springframework.hateoas.ResourceSupport;
 
 public class WidgetConfigResource extends ResourceSupport {
 
-  @NotNull private String title;
+    private String widgetId;
 
-  private String type;
+    @NotNull
+    private String title;
 
-  @JsonInclude(JsonInclude.Include.NON_ABSENT)
-  private String titleUrl;
+    private String type;
 
-  @JsonInclude(JsonInclude.Include.NON_ABSENT)
-  private String description;
+    @JsonInclude(JsonInclude.Include.NON_ABSENT)
+    private String titleUrl;
 
-  private Date lastModified;
+    @JsonInclude(JsonInclude.Include.NON_ABSENT)
+    private String description;
 
-  private List<SourceConfig> sourceConfigs = new ArrayList<>();
+    private Date lastModified;
 
-  public String getTitle() {
-    return title;
-  }
+    private List<SourceConfig> sourceConfigs = new ArrayList<>();
 
-  public void setTitle(String title) {
-    this.title = title;
-  }
+    public String getWidgetId() {
+        return widgetId;
+    }
 
-  public String getType() {
-    return type;
-  }
+    public void setWidgetId(String widgetId) {
+        this.widgetId = widgetId;
+    }
 
-  public void setType(String type) {
-    this.type = type;
-  }
+    public String getTitle() {
+        return title;
+    }
 
-  public String getTitleUrl() {
-    return titleUrl;
-  }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-  public void setTitleUrl(String url) {
-    this.titleUrl = url;
-  }
+    public String getType() {
+        return type;
+    }
 
-  public String getDescription() {
-    return description;
-  }
+    public void setType(String type) {
+        this.type = type;
+    }
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
+    public String getTitleUrl() {
+        return titleUrl;
+    }
 
-  public Date getLastModified() {
-    return lastModified;
-  }
+    public void setTitleUrl(String url) {
+        this.titleUrl = url;
+    }
 
-  public void setLastModified(Date lastModified) {
-    this.lastModified = lastModified;
-  }
+    public String getDescription() {
+        return description;
+    }
 
-  public List<SourceConfig> getSourceConfigs() {
-    return sourceConfigs;
-  }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-  public void setSourceConfigs(List<SourceConfig> sourceConfigs) {
-    this.sourceConfigs = sourceConfigs;
-  }
+    public Date getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(Date lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    public List<SourceConfig> getSourceConfigs() {
+        return sourceConfigs;
+    }
+
+    public void setSourceConfigs(List<SourceConfig> sourceConfigs) {
+        this.sourceConfigs = sourceConfigs;
+    }
 }

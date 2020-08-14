@@ -27,6 +27,7 @@ public class WidgetConfigResourceAssembler
   @Override
   public WidgetConfigResource toResource(WidgetConfig entity) {
     WidgetConfigResource resource = new WidgetConfigResource();
+    resource.setWidgetId(entity.getId());
     resource.setTitle(entity.getTitle());
     resource.setType(entity.getType());
     resource.setTitleUrl(entity.getTitleUrl());
@@ -63,6 +64,7 @@ public class WidgetConfigResourceAssembler
 
   public WidgetConfig toEntity(WidgetConfigResource resource) {
     WidgetConfig entity = new WidgetConfig();
+    entity.setId(entity.getId());
     entity.setLastModified(LocalDateTime.now());
     entity.setTitle(resource.getTitle());
     entity.setType(resource.getType());
